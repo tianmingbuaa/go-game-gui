@@ -51,10 +51,35 @@ pnpm preview      # 用 Electron 预览生产构建
 
 ```bash
 pnpm dist         # 生成当前平台的可运行目录，输出到 release/
-pnpm dist:linux   # 生成 Linux AppImage
+pnpm dist:linux   # 在 Linux 上生成 AppImage
+pnpm dist:win     # 在 Windows 上生成 NSIS 安装包
 ```
 
-`electron-builder.yml` 中已经配置 Windows NSIS、macOS DMG 与 Linux AppImage 目标。
+`electron-builder.yml` 中已经配置 Windows NSIS、macOS DMG 与 Linux AppImage 目标；CI 产物名统一为 ASCII：
+`moyi-gomoku-<version>-<arch>-setup.exe` 与 `moyi-gomoku-<version>-<arch>.AppImage`。
+
+### GitHub Actions 自动构建与发布
+
+仓库内置 [`.github/workflows/release.yml`](.github/workflows/release.yml)。推送形如 `v1.0.0` 的 tag 后，GitHub 会：
+
+1. 校验 tag 与 `package.json` 的 `version` 一致，并运行测试；
+2. 在 `ubuntu-latest` 构建 Linux AppImage，在 `windows-latest` 构建 Windows NSIS 安装包；
+3. 创建（或更新）GitHub Release，并把两个安装包作为 release assets 上传。
+
+```bash
+# 发布前先确认 package.json 的 version 与 tag 一致
+git tag v1.0.0
+git push origin main
+git push origin v1.0.0
+```
+
+注意事项：
+
+- **tag 必须指向包含该 workflow 的提交。** 如果 tag 已经指向旧提交（例如本地已有的 `v1.0.0`），提交本 workflow 后需要把 tag 移到最新提交（`git tag -f v1.0.0`）再推送，或先升级 `package.json` 版本并发布新 tag；否则 GitHub 找不到 workflow，不会触发。
+- tag 去掉 `v` 后必须与 `package.json` 的 `version` 完全相同（workflow 会校验）。
+- 仓库 Settings → Actions → General 的 Workflow permissions 需要允许 **Read and write**，`GITHUB_TOKEN` 才有权限创建 Release。公开仓库通常默认即可。
+- 产物未签名：Windows SmartScreen 可能提示未知发布者；Linux AppImage 需要 `chmod +x` 后运行。macOS 不在该工作流中。
+- 当前矩阵构建 x64；如需 arm64，可在 workflow 的 matrix 中增加对应 runner 与 `--arm64` 参数。
 
 ## 目录结构
 
@@ -84,6 +109,7 @@ src/
 tests/                    # 棋规与 AI 单元测试
 docs/                     # AI 扩展指南与界面截图
 build/                    # 应用图标等打包资源
+.github/workflows/        # GitHub Actions：tag 触发的 Windows/Linux 打包与 Release
 ```
 
 ## 架构

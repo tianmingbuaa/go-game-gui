@@ -21,7 +21,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "dist": "pnpm run build && electron-builder --dir",
-    "dist:linux": "pnpm run build && electron-builder --linux AppImage"
+    "dist:linux": "pnpm run build && electron-builder --linux AppImage --publish never",
+    "dist:win": "pnpm run build && electron-builder --win nsis --publish never"
   },
   "dependencies": {},
   "devDependencies": {

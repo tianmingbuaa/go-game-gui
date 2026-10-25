@@ -12,7 +12,8 @@ files:
   - THIRD_PARTY_NOTICES.md
 asar: true
 win:
-  icon: build/icon.png
+  icon: build/icon.ico
+  artifactName: '${name}-${version}-${arch}-setup.${ext}'
   target:
     - nsis
 mac:
@@ -22,6 +23,7 @@ mac:
   category: public.app-category.board-games
 linux:
   icon: build/icon.png
+  artifactName: '${name}-${version}-${arch}.${ext}'
   target:
     - AppImage
   category: Game
