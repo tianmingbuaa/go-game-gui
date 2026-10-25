@@ -2,6 +2,10 @@
 
 本文说明如何在不改动界面的情况下，为墨弈五子棋增加新的 AI 引擎。
 
+> **本版本的固定先手约定**：人机模式中 AI 永远执黑先行，玩家固定执白。渲染层只会以
+> `aiStone = BLACK`、`opponentStone = WHITE` 发起请求。新增引擎可以自行选择白棋应手，
+> 但不应假设玩家可以执黑，也不要依赖“AI 后行”的界面选项。
+
 ## 1. 接口契约
 
 接口位于 [`src/shared/ai.ts`](../src/shared/ai.ts)：
@@ -23,7 +27,7 @@ export interface AIEngineInfo {
 
 export interface AIMoveRequest {
   board: Board                 // 长度 225 的一维棋盘，0 空 / 1 黑 / 2 白
-  aiStone: Stone               // AI 执子颜色
+  aiStone: Stone               // AI 执子颜色；本应用人机模式固定为 BLACK
   opponentStone: Stone
   history: readonly Move[]     // 按时间正序的已落子记录
   level: string                // 从 info.levels 中选择的难度 id
@@ -80,7 +84,12 @@ Vue 视图
 
 ## 3. 添加一个引擎
 
-以内置实现为参考：[`src/main/ai/engines/classic.ts`](../src/main/ai/engines/classic.ts)。
+可参考两份内置实现：
+
+- [`src/main/ai/engines/first-player/`](../src/main/ai/engines/first-player/)：默认注册的
+  先手必胜引擎（VCF + 迭代加深 α-β）。
+- [`src/main/ai/engines/classic.ts`](../src/main/ai/engines/classic.ts)：保留在仓库中的
+  轻量参考引擎，用于测试和扩展指南，不注册到人机模式。
 
 ### 3.1 实现接口
 
@@ -132,7 +141,9 @@ export function createAIRegistry(): AIEngineRegistry {
 }
 ```
 
-重启应用后，设置面板的「AI 引擎」下拉框会自动出现新引擎，它的难度按钮也会根据 `levels` 自动渲染。
+在 `createAIRegistry()` 中注册后，设置面板的「AI 引擎」下拉框会自动出现新引擎，它的难度按钮也会根据 `levels` 自动渲染。当前生产注册表只包含先手必胜引擎；若要发布新引擎，替换或追加该注册即可。
+
+> 注意：人机模式现在固定 AI 执黑先行。如果你的引擎是防守型或只擅长后手，它仍会以黑棋被调用；请在引擎内部处理这一前提，或不要把它注册到本模式。
 
 ### 3.3 测试引擎
 
@@ -175,6 +186,16 @@ pnpm typecheck
 3. 每次递归检查 `AbortSignal`，以便超时后及时退出。
 4. 若耗时超过几十毫秒，将计算移入 Worker，并使用消息协议适配 `AIEngine`。
 
+先手必胜引擎额外采用了以下战术顺序，可以作为强攻型引擎的参考：
+
+- 即时成五 / 封堵必败点；
+- 对方“活四制造点”的抢占（不处理会被对手做出双成五点）；
+- VCF 连续冲四搜索：只走冲四，防方应手唯一；若防方自己有即时成五则此路作废；
+- 迭代加深 α-β，候选按“进攻棋型 + 防守棋型”排序，并对活三 / 冲四做强制延伸；
+- 棋型评估区分活四、冲四、活三、眠三，避免把双威胁当成普通连接。
+
+VCF 是可靠的“找到即必胜”搜索；VCT 更完整但必须严格枚举防方对活三的所有应手（包括反冲四），否则很容易误判。若没有实现完整的 VCT 反杀规则，建议只把 VCF 结果当作必胜，其余交给 α-β 评估。
+
 ### 远程引擎
 
 `chooseMove` 可以是异步网络请求：
@@ -199,6 +220,7 @@ async chooseMove(request, signal) {
 
 ## 5. 不要做的事
 
+- 不要假设 AI 还能执白或后行；人机模式固定 AI 执黑先行。
 - 不要在引擎里修改 `request.board`。
 - 不要返回已占用的索引；即使主进程会拦截，也应在引擎侧保证合法。
 - 不要在接口中暴露 Node 对象、DOM 节点或 Vue ref。

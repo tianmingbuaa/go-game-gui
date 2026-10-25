@@ -13,6 +13,11 @@ export type Stone = typeof BLACK | typeof WHITE
 export type Cell = typeof EMPTY | Stone
 export type Board = readonly Cell[]
 
+/** Freestyle Gomoku: black always moves first. */
+export const FIRST_PLAYER: Stone = BLACK
+/** The answering player. */
+export const SECOND_PLAYER: Stone = WHITE
+
 export type GameMode = 'ai' | 'local'
 export type GamePhase = 'playing' | 'won' | 'draw'
 

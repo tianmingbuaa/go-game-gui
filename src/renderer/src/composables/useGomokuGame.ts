@@ -2,6 +2,8 @@ import { computed, onScopeDispose, reactive, ref } from 'vue'
 import type { AIChooseMovePayload, AIEngineInfo } from '@shared/ai'
 import {
   BLACK,
+  FIRST_PLAYER,
+  SECOND_PLAYER,
   otherStone,
   type Board,
   type GameMode,
@@ -21,10 +23,18 @@ import {
 
 export interface GameSettings {
   mode: GameMode
-  humanStone: Stone
   engineId: string
   level: string
 }
+
+/**
+ * The AI is permanently the first player (black); the human always answers
+ * with white. This is the core of the "first player wins" match design.
+ */
+export const AI_STONE: Stone = FIRST_PLAYER
+export const HUMAN_STONE: Stone = SECOND_PLAYER
+
+const DEFAULT_ENGINE_ID = 'first-player-win'
 
 export interface GameResultView {
   tone: 'win' | 'lose' | 'draw'
@@ -42,9 +52,8 @@ const AI_MIN_THINK_MS = 420
 export function useGomokuGame() {
   const settings = reactive<GameSettings>({
     mode: 'ai',
-    humanStone: BLACK,
-    engineId: 'classic-heuristic',
-    level: 'normal'
+    engineId: DEFAULT_ENGINE_ID,
+    level: 'winning'
   })
 
   const engines = ref<AIEngineInfo[]>([])
@@ -65,7 +74,7 @@ export function useGomokuGame() {
   let noticeTimer: ReturnType<typeof setTimeout> | undefined
   let clockTimer: ReturnType<typeof setInterval> | undefined
 
-  const aiStone = computed(() => otherStone(settings.humanStone))
+  const aiStone = computed<Stone>(() => AI_STONE)
   const activeEngine = computed(() =>
     engines.value.find((engine) => engine.id === settings.engineId)
   )
@@ -82,7 +91,7 @@ export function useGomokuGame() {
     () =>
       isAI.value &&
       phase.value === 'playing' &&
-      currentStone.value === settings.humanStone &&
+      currentStone.value === HUMAN_STONE &&
       !aiThinking.value
   )
 
@@ -95,7 +104,7 @@ export function useGomokuGame() {
   const canUndo = computed(() => {
     if (history.value.length === 0) return false
     if (!isAI.value) return true
-    return history.value.some((move) => move.stone === settings.humanStone)
+    return history.value.some((move) => move.stone === HUMAN_STONE)
   })
 
   const currentStoneLabel = computed(() => (currentStone.value === BLACK ? '黑棋' : '白棋'))
@@ -104,7 +113,7 @@ export function useGomokuGame() {
     if (phase.value === 'draw') return '本局和棋'
     if (phase.value === 'won') {
       const won = winningLine.value?.stone
-      if (isAI.value) return won === settings.humanStone ? '你赢下了这一局' : 'AI 赢下了这一局'
+      if (isAI.value) return won === HUMAN_STONE ? '你赢下了这一局' : 'AI 先手取胜'
       return `${won === BLACK ? '黑棋' : '白棋'}获胜`
     }
     if (isAI.value && aiThinking.value) return 'AI 正在推演'
@@ -123,8 +132,8 @@ export function useGomokuGame() {
     if (phase.value === 'won') return '五子连珠，胜负已分'
     if (phase.value === 'draw') return '棋盘已满，未分胜负'
     if (errorMessage.value) return errorMessage.value
-    if (isAI.value && aiThinking.value) return '引擎正在计算攻守要点，请稍候'
-    return isAI.value ? '点击棋盘交叉点落子' : `点击交叉点，为${currentStoneLabel.value}落子`
+    if (isAI.value && aiThinking.value) return '先手引擎正在计算连攻，请稍候'
+    return isAI.value ? '点击棋盘交叉点，为白棋落子' : `点击交叉点，为${currentStoneLabel.value}落子`
   })
 
   const elapsedLabel = computed(() => {
@@ -148,11 +157,13 @@ export function useGomokuGame() {
     if (!won) return null
 
     if (isAI.value) {
-      const humanWon = won === settings.humanStone
+      const humanWon = won === HUMAN_STONE
       return {
         tone: humanWon ? 'win' : 'lose',
         title: humanWon ? '漂亮的五连' : '棋差一着',
-        subtitle: humanWon ? '你在与 AI 的对弈中拿下此局。' : '再想一步，下一局扳回来。',
+        subtitle: humanWon
+          ? '你挡住了先手连攻，拿下此局。'
+          : 'AI 执黑先行，以连续威胁锁定胜局。',
         seal: humanWon ? '胜' : '负'
       }
     }
@@ -210,13 +221,7 @@ export function useGomokuGame() {
   function setMode(mode: GameMode): void {
     if (settings.mode === mode) return
     settings.mode = mode
-    newGame(mode === 'ai' ? '已切换为人机对战' : '已切换为双人对弈')
-  }
-
-  function setHumanStone(stone: Stone): void {
-    if (settings.humanStone === stone) return
-    settings.humanStone = stone
-    newGame(stone === BLACK ? '你执黑先行' : '你执白，AI 先行')
+    newGame(mode === 'ai' ? '已切换为人机对战 · AI 执黑先行' : '已切换为双人对弈')
   }
 
   function setEngine(engineId: string): void {
@@ -240,7 +245,7 @@ export function useGomokuGame() {
 
   function play(index: number): void {
     if (!canInteract.value) return
-    const stone = isAI.value ? settings.humanStone : currentStone.value
+    const stone = isAI.value ? HUMAN_STONE : currentStone.value
     commitMove(index, stone)
   }
 
@@ -309,7 +314,7 @@ export function useGomokuGame() {
       engineId: settings.engineId,
       board: [...board.value],
       aiStone: aiStone.value,
-      opponentStone: settings.humanStone,
+      opponentStone: HUMAN_STONE,
       history: history.value.map((move) => ({ ...move })),
       level: settings.level
     }
@@ -357,7 +362,7 @@ export function useGomokuGame() {
       const last = remaining.at(-1)
       if (last?.stone === aiStone.value) {
         remaining.pop()
-        if (remaining.at(-1)?.stone === settings.humanStone) remaining.pop()
+        if (remaining.at(-1)?.stone === HUMAN_STONE) remaining.pop()
       } else {
         remaining.pop()
       }
@@ -404,7 +409,7 @@ export function useGomokuGame() {
   }
 
   function restart(): void {
-    newGame('新的一局，落子有声')
+    newGame('新的一局 · AI 重新执黑先行')
   }
 
   function dismissResult(): void {
@@ -454,7 +459,6 @@ export function useGomokuGame() {
     elapsedLabel,
     modeLabel,
     setMode,
-    setHumanStone,
     setEngine,
     setLevel,
     play,

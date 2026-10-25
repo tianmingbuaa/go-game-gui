@@ -16,24 +16,23 @@ const shortEngineName = computed(() => {
 })
 
 const blackPlayer = computed(() => {
-  const human = !game.isAI.value || game.settings.humanStone === BLACK
+  const human = !game.isAI.value
   return {
     kind: human ? 'human' : 'ai',
-    kicker: human ? (game.isAI.value ? 'YOU · BLACK' : 'PLAYER ONE') : 'AI · BLACK',
-    name: human ? (game.isAI.value ? '你' : '玩家一') : shortEngineName.value,
+    kicker: human ? 'PLAYER ONE · BLACK' : 'AI · BLACK',
+    name: human ? '玩家一' : shortEngineName.value,
     active: game.phase.value === 'playing' && game.currentStone.value === BLACK,
-    thinking: game.isAI.value && game.aiStone.value === BLACK && game.aiThinking.value
+    thinking: game.isAI.value && game.aiThinking.value
   }
 })
 
 const whitePlayer = computed(() => {
-  const human = !game.isAI.value || game.settings.humanStone === WHITE
   return {
-    kind: human ? 'human' : 'ai',
-    kicker: human ? (game.isAI.value ? 'YOU · WHITE' : 'PLAYER TWO') : 'AI · WHITE',
-    name: human ? (game.isAI.value ? '你' : '玩家二') : shortEngineName.value,
+    kind: 'human',
+    kicker: game.isAI.value ? 'YOU · WHITE' : 'PLAYER TWO · WHITE',
+    name: game.isAI.value ? '你' : '玩家二',
     active: game.phase.value === 'playing' && game.currentStone.value === WHITE,
-    thinking: game.isAI.value && game.aiStone.value === WHITE && game.aiThinking.value
+    thinking: false
   }
 })
 
@@ -185,14 +184,12 @@ function handleEngineChange(engineId: string): void {
       <aside class="sidebar">
         <SettingsPanel
           :mode="game.settings.mode"
-          :human-stone="game.settings.humanStone"
           :engine-id="game.settings.engineId"
           :level="game.settings.level"
           :engines="game.engines.value"
           :active-engine="game.activeEngine.value"
           :loading="game.enginesLoading.value"
           @update:mode="game.setMode"
-          @update:human-stone="game.setHumanStone"
           @update:engine-id="handleEngineChange"
           @update:level="game.setLevel"
         />
@@ -217,7 +214,8 @@ function handleEngineChange(engineId: string): void {
             <span :class="{ ready: Boolean(game.activeEngine.value) }">
               <i></i>{{ game.activeEngine.value ? '引擎就绪' : '未连接' }}
             </span>
-            <span>{{ game.activeLevel.value?.name ?? '标准' }}模式</span>
+            <span>固定执黑先行</span>
+            <span>{{ game.activeLevel.value?.name ?? '先手必胜' }}</span>
           </div>
         </section>
 
@@ -226,7 +224,7 @@ function handleEngineChange(engineId: string): void {
             <span class="card-kicker">EXTENSION READY</span>
             <span class="api-badge">AI API</span>
           </div>
-          <p>引擎通过统一接口注册，可无缝接入更强的本地或远程 AI。</p>
+          <p>AI 固定执黑先行；引擎通过统一接口注册，可无缝接入更强的本地或远程 AI。</p>
           <code>chooseMove(request, signal)</code>
         </section>
       </aside>

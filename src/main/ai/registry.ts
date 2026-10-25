@@ -1,5 +1,5 @@
 import type { AIEngine, AIEngineInfo, AIEngineRegistry } from '../../shared/ai'
-import { ClassicHeuristicAI } from './engines/classic'
+import { FirstPlayerAI } from './engines/first-player'
 
 /**
  * In-process registry. Register another engine here (or from a future plugin
@@ -37,6 +37,10 @@ export class DefaultAIEngineRegistry implements AIEngineRegistry {
 
 export function createAIRegistry(): AIEngineRegistry {
   const registry = new DefaultAIEngineRegistry()
-  registry.register(new ClassicHeuristicAI())
+  // AI mode is deliberately built around the first-player winning engine:
+  // black always starts, so only engines that embrace the first-move win are
+  // shipped in the AI picker. `ClassicHeuristicAI` remains in the tree as the
+  // reference/test engine described in docs/AI_ENGINE_GUIDE.md.
+  registry.register(new FirstPlayerAI())
   return registry
 }

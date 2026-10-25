@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { AIEngineInfo } from '@shared/ai'
-import { BLACK, WHITE, type GameMode, type Stone } from '@shared/game/types'
+import type { GameMode } from '@shared/game/types'
 
 const props = defineProps<{
   mode: GameMode
-  humanStone: Stone
   engineId: string
   level: string
   engines: readonly AIEngineInfo[]
@@ -15,7 +14,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'update:mode': [mode: GameMode]
-  'update:human-stone': [stone: Stone]
   'update:engine-id': [engineId: string]
   'update:level': [level: string]
 }>()
@@ -38,7 +36,7 @@ function onEngineChange(event: Event): void {
         <h1>对局设置</h1>
       </div>
       <span class="mode-chip" :class="{ ai: mode === 'ai' }">
-        <i></i>{{ mode === 'ai' ? '人机对弈' : '双人对弈' }}
+        <i></i>{{ mode === 'ai' ? '人机对弈 · AI 先行' : '双人对弈' }}
       </span>
     </div>
 
@@ -72,27 +70,28 @@ function onEngineChange(event: Event): void {
 
     <template v-if="mode === 'ai'">
       <div class="field">
-        <span class="field-label">你执</span>
-        <div class="stone-picker" role="group" aria-label="选择执子颜色">
-          <button
-            type="button"
-            :class="{ selected: humanStone === BLACK }"
-            @click="emit('update:human-stone', BLACK)"
-          >
+        <span class="field-label">开局阵型</span>
+        <div class="fixed-sides">
+          <div class="side-row ai-side">
             <span class="picker-stone black"></span>
-            黑棋
-            <small>先行</small>
-          </button>
-          <button
-            type="button"
-            :class="{ selected: humanStone === WHITE }"
-            @click="emit('update:human-stone', WHITE)"
-          >
+            <div class="side-copy">
+              <strong>AI · 黑棋</strong>
+              <small>固定先手 · 天元开局</small>
+            </div>
+            <span class="side-badge">必胜</span>
+          </div>
+          <div class="side-row">
             <span class="picker-stone white"></span>
-            白棋
-            <small>后行</small>
-          </button>
+            <div class="side-copy">
+              <strong>你 · 白棋</strong>
+              <small>后手应战</small>
+            </div>
+            <span class="side-tag">无禁手</span>
+          </div>
         </div>
+        <p class="first-note">
+          AI 固定执黑先行。无禁手规则允许自由构筑双活三、四三杀，引擎会持续制造不可兼防的双威胁。
+        </p>
       </div>
 
       <div class="field">
@@ -144,7 +143,7 @@ function onEngineChange(event: Event): void {
       同一设备轮流落子，黑棋先行。
     </div>
 
-    <p class="settings-footnote">切换设置会立即开启一局新棋。</p>
+    <p class="settings-footnote">AI 固定执黑先行；切换设置会立即开启一局新棋。</p>
   </section>
 </template>
 
@@ -228,6 +227,71 @@ h1 {
   font-size: 9px;
 }
 
+.fixed-sides {
+  display: grid;
+  gap: 7px;
+}
+
+.side-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.side-row.ai-side {
+  border-color: rgba(230, 179, 109, 0.28);
+  background: rgba(230, 179, 109, 0.06);
+}
+
+.side-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.side-copy strong {
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.side-copy small {
+  color: var(--faint);
+  font-size: 8.5px;
+}
+
+.side-badge {
+  margin-left: auto;
+  padding: 3px 7px;
+  border: 1px solid rgba(230, 179, 109, 0.35);
+  border-radius: 999px;
+  background: rgba(230, 179, 109, 0.1);
+  color: #f0d5a9;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.side-tag {
+  margin-left: auto;
+  color: rgba(116, 205, 180, 0.7);
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+}
+
+.first-note {
+  margin: 8px 1px 0;
+  color: var(--faint);
+  font-size: 9.5px;
+  line-height: 1.6;
+}
+
 .segmented {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -274,48 +338,6 @@ h1 {
     linear-gradient(180deg, rgba(255, 222, 170, 0.13), rgba(224, 174, 100, 0.055));
   color: #f1dfc2;
   box-shadow: 0 5px 14px rgba(0, 0, 0, 0.18);
-}
-
-.stone-picker {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.stone-picker button {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  height: 38px;
-  padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 11px;
-  background: rgba(255, 255, 255, 0.018);
-  color: var(--muted);
-  font-size: 11px;
-  cursor: pointer;
-  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
-}
-
-.stone-picker button small {
-  margin-left: auto;
-  color: var(--faint);
-  font-size: 8px;
-}
-
-.stone-picker button:hover {
-  border-color: rgba(255, 255, 255, 0.13);
-  color: var(--text);
-}
-
-.stone-picker button.selected {
-  border-color: rgba(230, 179, 109, 0.36);
-  background: rgba(230, 179, 109, 0.075);
-  color: var(--text);
-}
-
-.stone-picker button.selected small {
-  color: rgba(230, 179, 109, 0.68);
 }
 
 .picker-stone {
