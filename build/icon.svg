@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#202c35"/>
+      <stop offset="0.48" stop-color="#10171f"/>
+      <stop offset="1" stop-color="#05080d"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2d39f" stop-opacity=".85"/>
+      <stop offset="0.5" stop-color="#d7a566" stop-opacity=".38"/>
+      <stop offset="1" stop-color="#9f7039" stop-opacity=".7"/>
+    </linearGradient>
+    <radialGradient id="stone" cx="32%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#fffef9"/>
+      <stop offset="0.38" stop-color="#f6f0e3"/>
+      <stop offset="0.72" stop-color="#d9cdb9"/>
+      <stop offset="1" stop-color="#9c8e78"/>
+    </radialGradient>
+    <radialGradient id="warm" cx="50%" cy="40%" r="65%">
+      <stop offset="0" stop-color="#e7b56f" stop-opacity=".13"/>
+      <stop offset="1" stop-color="#e7b56f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="stone-shadow" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="20" stdDeviation="15" flood-color="#000000" flood-opacity=".6"/>
+    </filter>
+    <clipPath id="tile">
+      <rect x="16" y="16" width="480" height="480" rx="118"/>
+    </clipPath>
+  </defs>
+
+  <rect x="16" y="16" width="480" height="480" rx="118" fill="url(#background)"/>
+  <g clip-path="url(#tile)">
+    <rect x="16" y="16" width="480" height="480" fill="url(#warm)"/>
+    <g stroke="#e2b879" stroke-opacity=".26" stroke-width="1.6">
+      <path d="M92 108h328M92 178h328M92 256h328M92 334h328M92 404h328"/>
+      <path d="M108 92v328M178 92v328M256 92v328M334 92v328M404 92v328"/>
+    </g>
+    <g fill="#e3b979" fill-opacity=".46">
+      <circle cx="178" cy="178" r="4"/>
+      <circle cx="334" cy="178" r="4"/>
+      <circle cx="108" cy="256" r="4"/>
+      <circle cx="404" cy="256" r="4"/>
+      <circle cx="178" cy="334" r="4"/>
+      <circle cx="334" cy="334" r="4"/>
+    </g>
+    <circle cx="256" cy="256" r="144" fill="none" stroke="#edc98f" stroke-opacity=".14" stroke-width="2"/>
+  </g>
+  <rect x="16" y="16" width="480" height="480" rx="118" fill="none" stroke="url(#rim)" stroke-width="3"/>
+  <rect x="29" y="29" width="454" height="454" rx="106" fill="none" stroke="#f8e7c9" stroke-opacity=".09" stroke-width="1.5"/>
+
+  <circle cx="256" cy="256" r="111" fill="url(#stone)" filter="url(#stone-shadow)"/>
+  <ellipse cx="216" cy="205" rx="40" ry="24" transform="rotate(-28 216 205)" fill="#ffffff" opacity=".7"/>
+  <ellipse cx="292" cy="309" rx="55" ry="31" transform="rotate(-28 292 309)" fill="#8b7b62" opacity=".18"/>
+</svg>

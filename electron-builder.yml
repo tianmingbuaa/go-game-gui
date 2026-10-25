@@ -1,0 +1,28 @@
+appId: com.moyi.gomoku
+productName: 墨弈五子棋
+copyright: Copyright © 2026
+directories:
+  output: release
+  buildResources: build
+files:
+  - out/**/*
+  - build/icon.png
+  - package.json
+  - LICENSE
+  - THIRD_PARTY_NOTICES.md
+asar: true
+win:
+  icon: build/icon.png
+  target:
+    - nsis
+mac:
+  icon: build/icon.png
+  target:
+    - dmg
+  category: public.app-category.board-games
+linux:
+  icon: build/icon.png
+  target:
+    - AppImage
+  category: Game
+  synopsis: 墨弈五子棋，一款现代、可扩展的五子棋游戏
