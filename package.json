@@ -1,6 +1,6 @@
 {
   "name": "moyi-gomoku",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "墨弈五子棋 · 一个现代、可扩展的 Electron 五子棋游戏",
   "main": "./out/main/index.js",
   "author": "li chuyan",
