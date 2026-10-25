@@ -62,141 +62,102 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
   display: grid;
   place-items: center;
   padding: 24px;
-  border-radius: 19px;
-  background: rgba(6, 9, 15, 0.52);
-  backdrop-filter: blur(7px) saturate(0.9);
+  border-radius: 18px;
+  background: rgba(10, 11, 14, 0.34);
+  backdrop-filter: blur(3px) saturate(0.92);
 }
 
 .result-card {
-  position: relative;
-  width: min(352px, 92%);
-  padding: 28px 30px 25px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 22px;
-  background:
-    radial-gradient(120% 100% at 50% -15%, rgba(229, 181, 110, 0.13), transparent 58%),
-    linear-gradient(158deg, rgba(25, 31, 43, 0.98), rgba(10, 14, 22, 0.97));
+  width: min(348px, 92%);
+  padding: 26px 26px 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xl);
+  background: #17181d;
   box-shadow:
-    0 30px 70px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 30px 70px -24px rgba(0, 0, 0, 0.85);
   text-align: center;
 }
 
-.result-card::before {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border: 1px solid rgba(230, 184, 117, 0.09);
-  border-radius: 16px;
-  pointer-events: none;
-}
-
-.result-card.lose {
-  background:
-    radial-gradient(120% 100% at 50% -15%, rgba(111, 168, 180, 0.1), transparent 58%),
-    linear-gradient(158deg, rgba(21, 29, 39, 0.98), rgba(9, 13, 20, 0.97));
-}
-
 .result-kicker {
-  position: relative;
   display: block;
-  margin-bottom: 18px;
-  color: rgba(203, 178, 139, 0.55);
-  font-size: 8.5px;
-  font-weight: 650;
-  letter-spacing: 0.24em;
+  margin-bottom: 16px;
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
 }
 
 .result-seal {
-  position: relative;
   display: grid;
   place-items: center;
-  width: 66px;
-  height: 66px;
-  margin: 0 auto 17px;
-  border: 1px solid rgba(232, 188, 121, 0.48);
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 16px;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 28%, rgba(255, 231, 187, 0.14), transparent 58%),
-    rgba(230, 179, 109, 0.035);
-  box-shadow:
-    0 0 0 5px rgba(230, 179, 109, 0.035),
-    0 0 30px rgba(230, 179, 109, 0.1);
-  color: #e9c994;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
   font-family: var(--font-display);
   font-size: 27px;
-  font-weight: 500;
-}
-
-.result-seal::after {
-  content: '';
-  position: absolute;
-  inset: 5px;
-  border: 1px dashed rgba(232, 188, 121, 0.25);
-  border-radius: 50%;
-}
-
-.result-seal.draw {
-  border-color: rgba(160, 185, 201, 0.4);
-  color: #c2d5df;
-  box-shadow: 0 0 30px rgba(117, 166, 190, 0.08);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px var(--accent-line) inset;
 }
 
 .result-seal.lose {
-  border-color: rgba(129, 175, 190, 0.4);
-  color: #a9ceda;
-  background: rgba(121, 174, 191, 0.04);
-  box-shadow: 0 0 30px rgba(100, 160, 180, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  box-shadow: 0 0 0 1px var(--line-strong) inset;
+}
+
+.result-seal.draw {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-soft);
+  box-shadow: 0 0 0 1px var(--line-strong) inset;
 }
 
 h2 {
-  position: relative;
   margin: 0;
-  color: #f5eee2;
+  color: var(--text);
   font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
 }
 
 .result-card > p {
-  position: relative;
-  margin: 9px auto 0;
   max-width: 260px;
+  margin: 8px auto 0;
   color: var(--muted);
-  font-size: 11px;
-  line-height: 1.75;
+  font-size: 12px;
+  line-height: 1.7;
 }
 
 .result-stats {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 14px;
-  margin: 20px 0 22px;
+  margin: 18px 0 20px;
   color: var(--faint);
-  font-size: 9.5px;
+  font-size: 11px;
 }
 
 .result-stats strong {
-  color: #d8cbb7;
-  font-size: 11px;
+  color: var(--text-soft);
+  font-size: 12px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
 .result-stats i {
   width: 1px;
-  height: 11px;
-  background: rgba(255, 255, 255, 0.1);
+  height: 12px;
+  background: var(--line);
 }
 
 .result-actions {
-  position: relative;
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .result-primary {
@@ -205,45 +166,50 @@ h2 {
   justify-content: center;
   gap: 8px;
   height: 42px;
-  border: 1px solid rgba(255, 224, 175, 0.5);
-  border-radius: 11px;
-  background: linear-gradient(180deg, #efc887, #dba75e);
-  color: #24170a;
-  font-size: 12px;
-  font-weight: 650;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  background: var(--accent-strong);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.4);
-  transition: filter 160ms ease, transform 160ms ease;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.18) inset,
+    0 8px 20px -8px rgba(99, 102, 241, 0.9);
+  transition: background-color 160ms ease, transform 120ms ease;
 }
 
 .result-primary svg {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.4;
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .result-primary:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
+  background: #7477f5;
+}
+
+.result-primary:active {
+  transform: translateY(1px);
 }
 
 .result-secondary {
   height: 34px;
   border: 0;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--faint);
-  font-size: 10.5px;
+  color: var(--muted);
+  font-size: 12px;
   cursor: pointer;
-  transition: color 160ms ease, background 160ms ease;
+  transition: background-color 160ms ease, color 160ms ease;
 }
 
 .result-secondary:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-hover);
   color: var(--text);
 }
 </style>

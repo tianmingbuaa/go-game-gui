@@ -189,41 +189,26 @@ function place(index: number): void {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 19px;
   overflow: hidden;
-  border: 1px solid rgba(72, 44, 17, 0.34);
+  border-radius: 18px;
   background:
-    radial-gradient(115% 85% at 16% 6%, rgba(255, 243, 213, 0.38), transparent 40%),
-    radial-gradient(85% 70% at 96% 102%, rgba(83, 43, 12, 0.24), transparent 58%),
-    repeating-linear-gradient(93deg, rgba(91, 51, 18, 0.045) 0, rgba(91, 51, 18, 0.045) 1px, transparent 1px, transparent 7px),
-    repeating-linear-gradient(2deg, rgba(94, 52, 14, 0.025) 0, rgba(94, 52, 14, 0.025) 1px, transparent 1px, transparent 13px),
-    linear-gradient(135deg, #e5bb83 0%, #d8a76a 42%, #c89153 76%, #b88045 100%);
+    radial-gradient(120% 90% at 18% 4%, rgba(255, 255, 255, 0.5), transparent 46%),
+    radial-gradient(90% 80% at 100% 100%, rgba(150, 118, 74, 0.12), transparent 62%),
+    linear-gradient(150deg, var(--board-paper) 0%, #eee7da 55%, #e7ded0 100%);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.38),
-    inset 0 0 64px rgba(94, 54, 18, 0.16),
-    inset 0 -2px 5px rgba(84, 45, 13, 0.2);
+    inset 0 0 0 1px rgba(96, 74, 40, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
+/* waxed-paper grain */
 .board-surface::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background:
-    linear-gradient(102deg, transparent 0 46%, rgba(255, 249, 232, 0.09) 46.2%, transparent 46.6%),
-    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(92, 50, 16, 0.12) 100%);
-  mix-blend-mode: soft-light;
-}
-
-.board-surface::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.3;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
   mix-blend-mode: multiply;
 }
 
@@ -241,19 +226,19 @@ function place(index: number): void {
 }
 
 .grid-lines line {
-  stroke: rgba(67, 41, 16, 0.58);
-  stroke-width: 0.15;
+  stroke: var(--board-line);
+  stroke-width: 0.16;
 }
 
 .star-points circle {
-  fill: rgba(61, 37, 14, 0.78);
+  fill: var(--board-line-strong);
 }
 
 .coordinates text {
-  fill: rgba(67, 42, 17, 0.58);
+  fill: var(--board-ink);
   font-family: var(--font-sans);
-  font-size: 1.55px;
-  font-weight: 600;
+  font-size: 1.5px;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
@@ -262,15 +247,13 @@ function place(index: number): void {
 }
 
 .win-line {
-  stroke: rgba(255, 246, 218, 0.93);
-  stroke-width: 0.52;
+  stroke: var(--accent-strong);
+  stroke-width: 0.4;
   stroke-linecap: round;
-  filter:
-    drop-shadow(0 0 0.6px rgba(255, 220, 151, 0.9))
-    drop-shadow(0 0 2.4px rgba(245, 190, 95, 0.8));
+  filter: drop-shadow(0 0 0.8px rgba(255, 255, 255, 0.9));
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: draw-win-line 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: draw-win-line 560ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .points {
@@ -283,7 +266,7 @@ function place(index: number): void {
   position: absolute;
   display: grid;
   place-items: center;
-  width: 6.25%;
+  width: 6.4%;
   aspect-ratio: 1;
   padding: 0;
   border: 0;
@@ -306,111 +289,118 @@ function place(index: number): void {
 .intersection:focus-visible::after {
   content: '';
   position: absolute;
-  inset: 8%;
-  border: 1px solid rgba(255, 249, 225, 0.8);
+  inset: 6%;
+  border: 1.5px solid var(--accent-strong);
   border-radius: 50%;
-  box-shadow: 0 0 0 3px rgba(65, 40, 14, 0.16);
+  opacity: 0.75;
 }
 
 .stone {
   position: relative;
   display: grid;
   place-items: center;
-  width: 90%;
+  width: 88%;
   aspect-ratio: 1;
   border-radius: 50%;
-  animation: stone-drop 200ms cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+  animation: stone-drop 200ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
 }
 
 .stone.black {
-  background:
-    radial-gradient(circle at 31% 23%, #626b77 0%, #2c333f 23%, #131821 58%, #07090d 100%);
+  background: radial-gradient(circle at 33% 26%, #50565f 0%, #262930 32%, #131418 70%, #090a0c 100%);
   box-shadow:
-    0 2.5px 4px rgba(45, 27, 8, 0.55),
-    0 6px 10px rgba(45, 27, 8, 0.18),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.24),
-    inset 0 -4px 6px rgba(0, 0, 0, 0.62);
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 2px 2px rgba(70, 54, 30, 0.28),
+    0 5px 10px rgba(70, 54, 30, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.18),
+    inset 0 -4px 7px rgba(0, 0, 0, 0.5);
 }
 
 .stone.white {
-  background:
-    radial-gradient(circle at 31% 23%, #fffef9 0%, #f5efe2 34%, #dbd0bd 70%, #b5a78f 100%);
+  background: radial-gradient(circle at 33% 26%, #ffffff 0%, #f8f6f1 36%, #e9e5dc 72%, #d3cec4 100%);
   box-shadow:
-    0 2.5px 4px rgba(55, 34, 11, 0.42),
-    0 6px 10px rgba(55, 34, 11, 0.14),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.9),
-    inset 0 -4px 6px rgba(96, 78, 50, 0.3);
+    0 0 0 1px rgba(96, 74, 40, 0.14),
+    0 2px 2px rgba(96, 74, 40, 0.2),
+    0 5px 10px rgba(96, 74, 40, 0.16),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -4px 7px rgba(120, 104, 78, 0.16);
 }
 
 .stone::before {
   content: '';
   position: absolute;
   top: 14%;
-  left: 23%;
-  width: 29%;
-  height: 19%;
+  left: 24%;
+  width: 28%;
+  height: 17%;
   border-radius: 50%;
   transform: rotate(-24deg);
-  background: rgba(255, 255, 255, 0.35);
-  filter: blur(0.6px);
+  background: rgba(255, 255, 255, 0.32);
+  filter: blur(0.8px);
 }
 
 .stone.white::before {
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.92);
 }
 
+/* winning stones get a quiet accent halo instead of gold glow */
 .stone.winning {
-  animation: stone-win-pulse 1.6s ease-in-out infinite;
+  z-index: 1;
+  animation: stone-win-pulse 1.8s ease-in-out infinite;
+}
+
+.stone.winning::after {
+  content: '';
+  position: absolute;
+  inset: -14%;
+  border: 1.5px solid var(--accent-strong);
+  border-radius: 50%;
+  opacity: 0.85;
 }
 
 .last-marker {
   position: relative;
   z-index: 2;
-  width: 26%;
+  width: 24%;
   aspect-ratio: 1;
   border-radius: 50%;
 }
 
 .stone.black .last-marker {
-  background: #f5cf8f;
-  box-shadow: 0 0 0 1px rgba(25, 18, 8, 0.45), 0 0 6px rgba(245, 207, 143, 0.7);
+  background: var(--accent);
 }
 
 .stone.white .last-marker {
-  background: #8d6334;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.32);
+  background: var(--accent-strong);
 }
 
 .ghost-stone {
-  width: 90%;
+  width: 88%;
   aspect-ratio: 1;
   border-radius: 50%;
   opacity: 0;
-  transform: scale(0.84);
-  transition: opacity 150ms ease, transform 150ms ease;
+  transform: scale(0.82);
+  transition: opacity 140ms ease, transform 140ms ease;
   pointer-events: none;
 }
 
 .ghost-stone.black {
-  background: radial-gradient(circle at 32% 25%, #3b4350, #0b0e13 70%);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.16);
+  background: radial-gradient(circle at 33% 26%, #50565f, #0a0b0d 75%);
 }
 
 .ghost-stone.white {
-  background: radial-gradient(circle at 32% 25%, #fffdf6, #cec2ac 78%);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.85);
+  background: radial-gradient(circle at 33% 26%, #ffffff, #d3cec4 80%);
 }
 
 .intersection:not(:disabled):hover .ghost-stone,
 .intersection:not(:disabled):focus-visible .ghost-stone {
-  opacity: 0.34;
+  opacity: 0.36;
   transform: scale(1);
 }
 
 @keyframes stone-drop {
   from {
     opacity: 0.4;
-    transform: scale(0.64);
+    transform: scale(0.6);
   }
   to {
     opacity: 1;
@@ -421,15 +411,10 @@ function place(index: number): void {
 @keyframes stone-win-pulse {
   0%,
   100% {
-    box-shadow:
-      0 2.5px 4px rgba(45, 27, 8, 0.5),
-      0 0 0 0 rgba(255, 225, 161, 0.28);
+    transform: scale(1.04);
   }
   50% {
-    box-shadow:
-      0 2.5px 4px rgba(45, 27, 8, 0.5),
-      0 0 0 4px rgba(255, 225, 161, 0.2),
-      0 0 16px rgba(255, 215, 140, 0.42);
+    transform: scale(1.1);
   }
 }
 

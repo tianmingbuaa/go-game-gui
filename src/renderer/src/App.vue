@@ -53,13 +53,9 @@ function handleEngineChange(engineId: string): void {
         <div class="duel-bar">
           <article
             class="player-card"
-            :class="{
-              active: blackPlayer.active,
-              ai: blackPlayer.kind === 'ai',
-              thinking: blackPlayer.thinking
-            }"
+            :class="{ active: blackPlayer.active || blackPlayer.thinking, thinking: blackPlayer.thinking }"
           >
-            <StoneBadge :stone="BLACK" :active="blackPlayer.active" />
+            <StoneBadge :stone="BLACK" :active="blackPlayer.active || blackPlayer.thinking" />
             <div class="player-copy">
               <span class="player-kicker">{{ blackPlayer.kicker }}</span>
               <span class="player-name">
@@ -80,23 +76,11 @@ function handleEngineChange(engineId: string): void {
             </div>
           </div>
 
-          <article
-            class="player-card ai-side"
-            :class="{
-              active: whitePlayer.active,
-              ai: whitePlayer.kind === 'ai',
-              thinking: whitePlayer.thinking
-            }"
-          >
+          <article class="player-card ai-side" :class="{ active: whitePlayer.active }">
             <StoneBadge :stone="WHITE" :active="whitePlayer.active" />
             <div class="player-copy">
               <span class="player-kicker">{{ whitePlayer.kicker }}</span>
-              <span class="player-name">
-                {{ whitePlayer.name }}
-                <span v-if="whitePlayer.thinking" class="thinking-dots" aria-label="正在思考">
-                  <i></i><i></i><i></i>
-                </span>
-              </span>
+              <span class="player-name">{{ whitePlayer.name }}</span>
             </div>
             <span class="player-color">白</span>
           </article>
@@ -134,10 +118,10 @@ function handleEngineChange(engineId: string): void {
             type="button"
             @click="game.retryAI"
           >
-            重试 AI
             <svg viewBox="0 0 16 16" aria-hidden="true">
               <path d="M13.2 8a5.2 5.2 0 1 1-1.5-3.7M13.2 2.6v3.7H9.5" />
             </svg>
+            重试 AI
           </button>
         </div>
 
@@ -198,7 +182,7 @@ function handleEngineChange(engineId: string): void {
           <div class="engine-card-head">
             <div class="engine-glyph" aria-hidden="true">
               <svg viewBox="0 0 24 24">
-                <path d="M12 2.5 13.7 9l5.8 3-5.8 3-1.7 6.5-1.7-6.5-5.8-3 5.8-3L12 2.5Z" />
+                <path d="M12 2.75 13.8 9.1l6.3 1.8-6.3 1.8L12 19l-1.8-6.3-6.3-1.8 6.3-1.8L12 2.75Z" />
               </svg>
             </div>
             <div>

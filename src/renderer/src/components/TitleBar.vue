@@ -36,41 +36,36 @@ async function close(): Promise<void> {
   <header class="titlebar">
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 34 34">
+        <svg viewBox="0 0 28 28">
           <defs>
-            <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#26301f" />
-              <stop offset="1" stop-color="#10150f" />
+            <linearGradient id="mo-tile" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#8b93fb" />
+              <stop offset="1" stop-color="#5b5fe0" />
             </linearGradient>
-            <radialGradient id="brand-stone" cx="32%" cy="24%" r="78%">
-              <stop offset="0" stop-color="#fffdf7" />
-              <stop offset="0.58" stop-color="#ddd3c0" />
-              <stop offset="1" stop-color="#9c8f78" />
-            </radialGradient>
           </defs>
-          <rect x="1" y="1" width="32" height="32" rx="10" fill="url(#tile)" stroke="#d3a766" stroke-opacity=".42" />
-          <path d="M8 12h18M8 17h18M8 22h18M12 8v18M17 8v18M22 8v18" stroke="#e4bd82" stroke-opacity=".2" stroke-width=".8" />
-          <circle cx="17" cy="17" r="6.6" fill="url(#brand-stone)" />
-          <circle cx="14.7" cy="14.6" r="1.6" fill="#fff" opacity=".8" />
+          <rect x="0.5" y="0.5" width="27" height="27" rx="8" fill="url(#mo-tile)" />
+          <path d="M9 5.5v17M14 5.5v17M19 5.5v17M5.5 9h17M5.5 14h17M5.5 19h17" stroke="#fff" stroke-opacity=".22" stroke-width=".9" />
+          <circle cx="14" cy="14" r="4.4" fill="#fff" />
+          <circle cx="12.5" cy="12.5" r="1.3" fill="#fff" opacity=".95" />
         </svg>
       </span>
       <span class="brand-copy">
         <span class="brand-title">墨弈</span>
-        <span class="brand-subtitle">GOMOKU</span>
+        <span class="brand-subtitle">Gomoku</span>
       </span>
     </div>
 
     <div class="titlebar-center">
-      <span class="titlebar-rule"></span>
-      <span>15 × 15 · 无禁手</span>
-      <span class="titlebar-rule"></span>
+      <span>15 × 15</span>
+      <span class="dot"></span>
+      <span>无禁手</span>
     </div>
 
     <div class="titlebar-right">
-      <span class="offline-chip"><i></i>LOCAL PLAY</span>
+      <span class="offline-chip"><i></i>本地对局</span>
       <div class="window-controls">
         <button class="window-button" type="button" aria-label="最小化" title="最小化" @click="minimize">
-          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 6.5h6" /></svg>
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 6h6" /></svg>
         </button>
         <button
           class="window-button"
@@ -80,11 +75,11 @@ async function close(): Promise<void> {
           @click="toggleMaximize"
         >
           <svg v-if="!maximized" viewBox="0 0 12 12" aria-hidden="true">
-            <rect x="3" y="3" width="6" height="6" rx="1" />
+            <rect x="2.75" y="2.75" width="6.5" height="6.5" rx="1.6" />
           </svg>
           <svg v-else viewBox="0 0 12 12" aria-hidden="true">
-            <rect x="3" y="4.2" width="4.8" height="4.8" rx="0.8" />
-            <path d="M5 4.2V3h4v4H8" />
+            <rect x="2.75" y="4" width="5.25" height="5.25" rx="1.4" />
+            <path d="M4.75 4V2.75h4.5V7.25H8.9" />
           </svg>
         </button>
         <button class="window-button close" type="button" aria-label="关闭窗口" title="关闭" @click="close">
@@ -102,12 +97,12 @@ async function close(): Promise<void> {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex: 0 0 54px;
-  height: 54px;
-  padding: 0 10px 0 22px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
-  background: linear-gradient(180deg, rgba(10, 14, 22, 0.9), rgba(8, 11, 18, 0.64));
-  backdrop-filter: blur(22px);
+  flex: 0 0 56px;
+  height: 56px;
+  padding: 0 10px 0 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(12, 13, 16, 0.72);
+  backdrop-filter: blur(20px);
   -webkit-app-region: drag;
   user-select: none;
 }
@@ -115,71 +110,72 @@ async function close(): Promise<void> {
 .brand {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   min-width: 126px;
 }
 
 .brand-mark {
-  width: 30px;
-  height: 30px;
-  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.35));
+  width: 28px;
+  height: 28px;
 }
 
 .brand-mark svg {
   display: block;
   width: 100%;
   height: 100%;
+  filter: drop-shadow(0 4px 10px rgba(99, 102, 241, 0.35));
 }
 
 .brand-copy {
   display: flex;
   align-items: baseline;
-  gap: 9px;
+  gap: 8px;
 }
 
 .brand-title {
+  color: var(--text);
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  color: #f3eadb;
+  letter-spacing: 0.12em;
 }
 
 .brand-subtitle {
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 0.26em;
-  color: rgba(198, 169, 126, 0.72);
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .titlebar-center {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: rgba(169, 176, 192, 0.54);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
+  gap: 8px;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
   white-space: nowrap;
 }
 
-.titlebar-rule {
-  width: 22px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(211, 177, 121, 0.38));
-}
-
-.titlebar-rule:last-child {
-  background: linear-gradient(90deg, rgba(211, 177, 121, 0.38), transparent);
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--faint);
 }
 
 .titlebar-right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .offline-chip {
@@ -188,41 +184,40 @@ async function close(): Promise<void> {
   gap: 6px;
   height: 24px;
   padding: 0 10px;
-  border: 1px solid rgba(118, 189, 161, 0.15);
+  border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(96, 166, 139, 0.045);
-  color: rgba(158, 196, 179, 0.7);
-  font-size: 8px;
-  font-weight: 650;
-  letter-spacing: 0.14em;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .offline-chip i {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #76c3a3;
-  box-shadow: 0 0 7px rgba(118, 195, 163, 0.7);
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.16);
 }
 
 .window-controls {
   display: flex;
   align-items: center;
+  gap: 2px;
   -webkit-app-region: no-drag;
 }
 
 .window-button {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 30px;
+  width: 32px;
+  height: 28px;
   padding: 0;
   border: 0;
   border-radius: 7px;
   background: transparent;
-  color: rgba(219, 226, 239, 0.58);
+  color: var(--muted);
   cursor: pointer;
-  transition: background 160ms ease, color 160ms ease;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 .window-button svg {
@@ -230,18 +225,18 @@ async function close(): Promise<void> {
   height: 12px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.2;
+  stroke-width: 1.4;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .window-button:hover {
-  background: rgba(255, 255, 255, 0.075);
-  color: #f6f0e4;
+  background: var(--bg-hover);
+  color: var(--text);
 }
 
 .window-button.close:hover {
-  background: #c24747;
+  background: #ef4444;
   color: #fff;
 }
 

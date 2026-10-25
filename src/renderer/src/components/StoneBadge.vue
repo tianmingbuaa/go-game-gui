@@ -22,65 +22,63 @@ const stoneClass = computed(() => (props.stone === BLACK ? 'black' : 'white'))
   display: grid;
   place-items: center;
   flex: 0 0 auto;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  transition: box-shadow 240ms ease, transform 240ms ease;
+  transition: background-color 220ms ease, box-shadow 220ms ease;
 }
 
+/* soft halo that lights up when it's this side's turn */
 .stone-badge::after {
   content: '';
   position: absolute;
-  inset: -4px;
+  inset: 0;
   border-radius: 50%;
-  border: 1px solid rgba(230, 184, 114, 0);
-  transition: border-color 240ms ease, transform 240ms ease;
+  box-shadow: 0 0 0 0 rgba(129, 140, 248, 0);
+  transition: box-shadow 240ms ease;
 }
 
 .stone-badge.active::after {
-  border-color: rgba(230, 184, 114, 0.36);
-  transform: scale(1.04);
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.18);
 }
 
 .stone-body {
+  position: relative;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  position: relative;
 }
 
 .stone-body::before {
   content: '';
   position: absolute;
-  top: 16%;
-  left: 22%;
+  top: 15%;
+  left: 24%;
   width: 30%;
-  height: 20%;
+  height: 19%;
   border-radius: 50%;
-  transform: rotate(-24deg);
-  background: rgba(255, 255, 255, 0.45);
-  filter: blur(1px);
+  transform: rotate(-22deg);
+  background: rgba(255, 255, 255, 0.42);
+  filter: blur(1.2px);
 }
 
 .black .stone-body {
-  background:
-    radial-gradient(circle at 31% 24%, #6c7480 0%, #313844 24%, #11151d 62%, #07090e 100%);
+  background: radial-gradient(circle at 32% 26%, #4a4f57 0%, #26282e 38%, #131418 72%, #0a0b0d 100%);
   box-shadow:
-    0 5px 8px rgba(0, 0, 0, 0.5),
-    inset 0 1px 1px rgba(255, 255, 255, 0.18),
-    inset 0 -4px 7px rgba(0, 0, 0, 0.55);
+    inset 0 1px 1px rgba(255, 255, 255, 0.16),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+    0 3px 6px rgba(0, 0, 0, 0.4);
 }
 
 .white .stone-body {
-  background:
-    radial-gradient(circle at 31% 24%, #fffdf6 0%, #f4eee1 35%, #d8cebc 72%, #aa9d86 100%);
+  background: radial-gradient(circle at 32% 26%, #ffffff 0%, #f6f4ef 40%, #e6e2d9 74%, #cfcac0 100%);
   box-shadow:
-    0 5px 8px rgba(0, 0, 0, 0.38),
-    inset 0 1px 1px rgba(255, 255, 255, 0.8),
-    inset 0 -4px 7px rgba(94, 78, 54, 0.28);
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -3px 6px rgba(120, 112, 96, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 .white .stone-body::before {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.9);
 }
 </style>
