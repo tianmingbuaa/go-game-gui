@@ -70,12 +70,15 @@
   --success-soft: rgba(74, 222, 128, 0.42);
   --danger: #f87171;
 
-  /* Board */
-  --board-paper: #f3eee4;
-  --board-wall: #1a1a1e;
-  --board-line: rgba(92, 76, 54, 0.55);
-  --board-line-strong: rgba(85, 68, 44, 0.8);
-  --board-ink: rgba(96, 80, 58, 0.72);
+  /* Board: pale katsura wood, ink lines, lacquered frame */
+  --board-wood-1: #f5ecdb;
+  --board-wood-2: #eadec4;
+  --board-wood-3: #ddcdad;
+  --board-line: rgba(78, 60, 36, 0.33);
+  --board-line-edge: rgba(62, 47, 27, 0.62);
+  --board-ink: rgba(84, 65, 42, 0.6);
+  --board-frame-1: #2b2721;
+  --board-frame-2: #16140f;
 
   /* Shape & elevation */
   --radius-xl: 22px;
@@ -209,7 +212,10 @@ select:focus-visible {
 }
 
 .stage {
-  --board-width: min(100%, calc(100vh - 262px), 640px);
+  container-type: size;
+  /* The square wooden frame plus its margin, caption and action bar must
+     fit the stage height, so the board gets whatever height is left. */
+  --board-width: min(100cqi, calc(100cqh - 152px), 660px);
 
   display: flex;
   flex-direction: column;
@@ -226,7 +232,7 @@ select:focus-visible {
   align-items: center;
   gap: 12px;
   width: var(--board-width);
-  max-width: 100%;
+  max-width: 100cqi;
   flex: 0 0 auto;
 }
 
@@ -395,31 +401,45 @@ select:focus-visible {
 
 /* ----------------------------------------------------------- board frame */
 
+/* Lacquered wooden frame that seats the board, Goban style. */
 .board-frame {
   position: relative;
   width: var(--board-width);
-  max-width: 100%;
+  max-width: 100cqi;
   aspect-ratio: 1;
-  margin-top: 12px;
-  padding: 10px;
+  margin-top: 14px;
+  padding: 26px 26px;
   flex: 0 0 auto;
-  border: 1px solid var(--line);
-  border-radius: 26px;
-  background: linear-gradient(180deg, #1c1d22, var(--board-wall));
+  border-radius: 20px 20px 18px 18px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px) 0 0 / 76px 100%,
+    linear-gradient(180deg, var(--board-frame-1) 0%, #211d18 52%, var(--board-frame-2) 100%);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05) inset,
-    0 30px 60px -28px rgba(0, 0, 0, 0.85),
-    0 10px 24px -12px rgba(0, 0, 0, 0.55);
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 1px 0 rgba(255, 233, 197, 0.11) inset,
+    0 -14px 26px -18px rgba(0, 0, 0, 0.95) inset,
+    0 40px 80px -34px rgba(0, 0, 0, 0.9),
+    0 14px 30px -16px rgba(0, 0, 0, 0.65);
 }
 
+/* thin amber inlay following the wooden edge */
 .board-frame::before {
   content: '';
   position: absolute;
-  inset: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.045);
-  border-radius: 22px;
+  inset: 8px;
+  border: 1px solid rgba(214, 176, 118, 0.13);
+  border-radius: 14px;
   pointer-events: none;
-  z-index: 2;
+}
+
+/* sunlight glancing across the board */
+.board-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(70% 46% at 26% -8%, rgba(255, 240, 214, 0.1), transparent 70%);
 }
 
 .ambient-grid {
@@ -434,9 +454,9 @@ select:focus-visible {
   justify-content: space-between;
   gap: 14px;
   width: var(--board-width);
-  max-width: 100%;
+  max-width: 100cqi;
   min-height: 22px;
-  margin-top: 5px;
+  margin-top: 4px;
   padding: 0 4px;
   flex: 0 0 auto;
   color: var(--faint);
@@ -491,10 +511,10 @@ select:focus-visible {
   justify-content: space-between;
   gap: 16px;
   width: var(--board-width);
-  max-width: 100%;
+  max-width: 100cqi;
   height: 56px;
-  margin-top: 3px;
-  padding: 0 8px 0 16px;
+  margin-top: 2px;
+  padding: 0 10px 0 18px;
   flex: 0 0 auto;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -886,7 +906,7 @@ select:focus-visible {
   }
 
   .stage {
-    --board-width: min(100%, calc(100vh - 250px), 600px);
+    --board-width: min(100cqi, calc(100cqh - 152px), 620px);
   }
 
   .turn-center {
